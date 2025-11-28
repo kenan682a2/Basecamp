@@ -1,0 +1,43 @@
+.nav-all {
+    display: flex;
+    justify-content: space-between;
+    height: 10vh;
+    width: 100%;
+    padding: 3%;
+    align-items: center;
+
+    .nav-logo {
+        width: 70px;
+
+        img {
+            object-fit: contain;
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .nav-right {
+        display: flex;
+        justify-content: space-between;
+        width: max-content;
+        gap: 25px;
+
+        div {
+            display: flex;
+            gap: 5px;
+            font-size: 17px;
+            color: #0094C1;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 10px 15px;
+
+            &:hover {
+                transition: 0.5s;
+
+                background-color: #0094C1;
+                color: white;
+            }
+        }
+    }
+}

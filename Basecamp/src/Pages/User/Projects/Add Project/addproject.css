@@ -1,0 +1,68 @@
+.add-project {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    h2 {
+        text-align: center;
+    }
+
+    form {
+        width: 40%;
+
+        input {
+            width: 100%;
+
+            &:focus {
+                outline: none;
+                border: 1px solid rgba(59, 130, 246, 0.6);
+                box-shadow:
+                    0 0 0 3px rgba(59, 130, 246, 0.1),
+                    0 0 20px rgba(59, 130, 246, 0.2);
+            }
+        }
+
+        textarea {
+            border-radius: 5px;
+            padding: 5px;
+            resize: vertical;
+            min-height: 80px;
+            padding: 12px;
+            border: 1px solid rgba(203, 213, 225, 0.6);
+            border-radius: 6px;
+            background: #ffffff;
+            font-family: inherit;
+            font-size: 14px;
+            color: #1e293b;
+            transition: all 0.2s ease;
+
+            &:focus {
+                outline: none;
+                border: 1px solid rgba(59, 130, 246, 0.6);
+                box-shadow:
+                    0 0 0 3px rgba(59, 130, 246, 0.1),
+                    0 0 20px rgba(59, 130, 246, 0.2);
+            }
+        }
+
+    }
+
+    button {
+        width: max-content;
+        cursor: pointer;
+        gap: 5px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border: none;
+        transition: 0.5s;
+        background: rgb(126, 126, 126);
+        color: white;
+
+        &:hover{
+            background-color: rgb(75, 75, 75);
+        }
+    }
+}
