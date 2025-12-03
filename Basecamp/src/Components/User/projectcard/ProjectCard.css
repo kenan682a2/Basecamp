@@ -1,0 +1,136 @@
+.pc {
+    width: 100%;
+    max-width: 320px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: "Geist", sans-serif;
+}
+
+/* ---------- Header ---------- */
+.pc__header {
+    background: #3a3f47;
+    color: #fff;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.pc__header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.pc__title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.pc__email-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+.pc__email {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.pc__settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.pc__settings-btn:hover {
+    opacity: 1;
+}
+
+/* ---------- Content ---------- */
+.pc__content {
+    padding: 16px;
+}
+
+.pc__description {
+    font-size: 14px;
+    font-weight: 600;
+    color: #3a3f47;
+    margin-bottom: 12px;
+}
+
+/* ---------- Action Bar ---------- */
+.pc__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.pc__icon-group {
+    display: flex;
+    gap: 8px;
+}
+
+.pc__icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.pc__icon-btn:hover {
+    background: #e9e9e9;
+}
+
+.pc__delete-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #e91e63;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.pc__delete-btn:hover {
+    background: #d31356;
+}
+
+.pc__icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+.pc__delete-icon {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+}
