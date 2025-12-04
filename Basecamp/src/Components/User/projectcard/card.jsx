@@ -7,7 +7,7 @@ import {
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsPeopleFill } from "react-icons/bs";
 import { IoChatbubbleOutline } from "react-icons/io5";
-
+import { NavLink } from "react-router-dom";
 import "./ProjectCard.css"
 
 export default function ProjectCard({
@@ -26,9 +26,11 @@ export default function ProjectCard({
           <span className="pc__email"><FiMail className="pc__email-icon" />{email}</span>
         </div>
         
-        <button className="pc__settings-btn" onClick={onSettings}>
+       <NavLink to='/projects/:projectId/edit'>
+         <button className="pc__settings-btn" onClick={onSettings}>
           <IoSettingsOutline size={20} />
         </button>
+       </NavLink>
       </div>
 
       <div className="pc__content">
