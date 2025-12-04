@@ -36,20 +36,20 @@ export default function ProjectCard({
 
         <div className="pc__actions">
           <div className="pc__icon-group">
-            <button className="pc__icon-btn">
+            <div className=".pc_icons">
               <BsPeopleFill size={18} />
-            </button>
+            </div>
 
             <button className="pc__icon-btn">
-              <FiShare2 size={18} />
+              1
             </button>
 
-            <button className="pc__icon-btn">
+            <div className=".pc_icons">
               <IoChatbubbleOutline size={18} />
-            </button>
+            </div>
 
             <button className="pc__icon-btn">
-              <FiArchive size={18} />
+              2
             </button>
           </div>
 

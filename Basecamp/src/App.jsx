@@ -7,6 +7,7 @@ import UserRootNavless from './Pages/User/UserRootNavless.jsx';
 import UserSignUp from './Pages/User/SignUp/index.jsx'
 import AllProjects from './Pages/User/Projects/All Projects/index.jsx'
 import AddProjectUser from './Pages/User/Projects/Add Project/index.jsx'
+import EditProjectForm from './Pages/User/Projects/Edit Project/index.jsx';
 function App() {
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
           <Route path='projects' element={<UserRoot />} >
             <Route index element={<AllProjects />} />
             <Route path='add' element={<AddProjectUser />} />
+            <Route path=':projectId/edit' element={<EditProjectForm />} />
           </Route>
           <Route path='*' element={<UserLogin />} />
         </Route>
