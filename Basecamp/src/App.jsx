@@ -8,6 +8,9 @@ import UserSignUp from './Pages/User/SignUp/index.jsx'
 import AllProjects from './Pages/User/Projects/All Projects/index.jsx'
 import AddProjectUser from './Pages/User/Projects/Add Project/index.jsx'
 import EditProjectForm from './Pages/User/Projects/Edit Project/index.jsx';
+import Profile from './Pages/User/Profile/index.jsx';
+import AdminPanel from './Pages/User/Admin/index.jsx';
+
 function App() {
   return (
     <>
@@ -16,6 +19,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path='login' element={<UserLogin />} />
           <Route path='signup' element={<UserSignUp />} />
+          <Route path='profile/:id' element={<Profile />} />
+          <Route path='admin' element={<AdminPanel />} />
           <Route path='projects' element={<UserRoot />} >
             <Route index element={<AllProjects />} />
             <Route path='add' element={<AddProjectUser />} />

@@ -1,10 +1,11 @@
 import { db } from "../config/db.js";
 import { ProjectModel } from "../models/ProjectModel.js";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export const ProjectController = {
   createProject: async (req, res) => {
-    const { name, description, owner_Id } = req.body;
+    const { name, description } = req.body;
+    const owner_Id = req.userId;
 
     try {
       const result = await db.insert(ProjectModel).values({
@@ -24,7 +25,11 @@ export const ProjectController = {
   },
   getAllProject: async (req, res) => {
     try {
-      const projects = await db.select().from(ProjectModel);
+      const userId = req.userId;
+      const projects = await db
+        .select()
+        .from(ProjectModel)
+        .where(eq(ProjectModel.owner_Id, userId));
       res.status(200).json(projects);
     } catch (error) {
       console.log(error);
@@ -34,10 +39,16 @@ export const ProjectController = {
   getProject: async (req, res) => {
     try {
       const { id } = req.params;
+      const userId = req.userId;
       const project = await db
         .select()
         .from(ProjectModel)
-        .where(eq(ProjectModel.id, Number(id)));
+        .where(
+          and(
+            eq(ProjectModel.id, Number(id)),
+            eq(ProjectModel.owner_Id, userId)
+          )
+        );
 
       if (!project.length) {
         return res.status(404).json({ error: "Project not found" });
@@ -51,7 +62,15 @@ export const ProjectController = {
   deleteProject: async (req, res) => {
     try {
       const { id } = req.params;
-      await db.delete(ProjectModel).where(eq(ProjectModel.id, Number(id)));
+      const userId = req.userId;
+      await db
+        .delete(ProjectModel)
+        .where(
+          and(
+            eq(ProjectModel.id, Number(id)),
+            eq(ProjectModel.owner_Id, userId)
+          )
+        );
       res.status(200).json({ message: "Project deleted" });
     } catch (error) {
       console.log(error);
@@ -60,7 +79,10 @@ export const ProjectController = {
   },
   deleteAllProjects: async (req, res) => {
     try {
-      const result = await db.delete(ProjectModel);
+      const userId = req.userId;
+      const result = await db
+        .delete(ProjectModel)
+        .where(eq(ProjectModel.owner_Id, userId));
       res.status(200).json({ message: `Deleted ${result} projects` });
     } catch (error) {
       console.log(error);
@@ -71,10 +93,16 @@ export const ProjectController = {
     try {
       const { id } = req.params;
       const { name, description } = req.body;
-      await db   
+      const userId = req.userId;
+      await db
         .update(ProjectModel)
         .set({ name, description })
-        .where(eq(ProjectModel.id, Number(id)));
+        .where(
+          and(
+            eq(ProjectModel.id, Number(id)),
+            eq(ProjectModel.owner_Id, userId)
+          )
+        );
       res.status(201).json("Project updated");
     } catch (error) {
       console.log(error);

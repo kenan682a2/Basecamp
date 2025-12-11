@@ -1,31 +1,102 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import "./edit-project.css"
+import axios from "axios"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import * as Yup from "yup"
+
+const editProjectValidationSchema = Yup.object({
+  name: Yup.string()
+    .min(2, "Project name must be at least 2 characters")
+    .required("Project name is required"),
+  description: Yup.string()
+    .min(5, "Description must be at least 5 characters")
+    .required("Description is required"),
+})
 
 export default function EditProjectForm() {
-  const [projectName, setProjectName] = useState("New Project!!")
-  const [description, setDescription] = useState("New edited Description")
-  const [email, setEmail] = useState("")
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [members, setMembers] = useState([])
+  const { projectId } = useParams()
+  const navigate = useNavigate()
+  const [project, setProject] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
-  const handleAddMember = () => {
-    if (email.trim()) {
-      setMembers([...members, { id: Date.now(), email, isAdmin }])
-      setEmail("")
-      setIsAdmin(false)
+  useEffect(() => {
+    fetchProject()
+  }, [projectId])
+
+  const fetchProject = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        navigate("/login")
+        return
+      }
+
+      const response = await axios.get(
+        `http://localhost:3000/projects/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      setProject(response.data)
+      setLoading(false)
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to fetch project")
+      setLoading(false)
     }
   }
 
-  const handleRemoveMember = (id) => {
-    setMembers(members.filter((member) => member.id !== id))
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const token = localStorage.getItem("token")
+      await axios.patch(
+        `http://localhost:3000/projects/${projectId}`,
+        {
+          name: values.name,
+          description: values.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      navigate("/projects")
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to update project")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  const handleUpdateName = () => {
-    console.log("Project name updated:", projectName)
+  const handleDeleteProject = async () => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      try {
+        const token = localStorage.getItem("token")
+        await axios.delete(`http://localhost:3000/projects/${projectId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        navigate("/projects")
+      } catch (err) {
+        setError(err.response?.data?.error || "Failed to delete project")
+      }
+    }
   }
 
-  const handleUpdateDescription = () => {
-    console.log("Description updated:", description)
+  if (loading) return <div className="edit-project-wrapper"><p>Loading...</p></div>
+
+  if (!project) {
+    return (
+      <div className="edit-project-wrapper">
+        <p>{error || "Project not found"}</p>
+      </div>
+    )
   }
 
   return (
@@ -33,96 +104,77 @@ export default function EditProjectForm() {
       <div className="main-content">
         <div className="header-content">
           <h1 className="page-title">Edit Project</h1>
-          <p className="created-by">Created by: todo@gmail.com</p>
         </div>
 
-        <div className="form-section">
-          <label className="form-label">Name</label>
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-input"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              placeholder="Enter project name"
-            />
-            <button className="btn btn-secondary" onClick={handleUpdateName}>
-              Update Name
-            </button>
-          </div>
-        </div>
+        {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
 
-        <div className="form-section">
-          <label className="form-label">Description</label>
-          <div className="input-group">
-            <textarea
-              className="form-textarea"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter project description"
-              rows="4"
-            />
-            <button className="btn btn-secondary" onClick={handleUpdateDescription}>
-              Update Description
-            </button>
-          </div>
-        </div>
+        <Formik
+          initialValues={{
+            name: project.name || "",
+            description: project.description || "",
+          }}
+          validationSchema={editProjectValidationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, errors, touched }) => (
+            <Form>
+              <div className="form-section">
+                <label className="form-label" htmlFor="name">
+                  Name
+                </label>
+                <div className="input-group">
+                  <Field
+                    type="text"
+                    name="name"
+                    className="form-input"
+                    placeholder="Enter project name"
+                  />
+                  {errors.name && touched.name && (
+                    <ErrorMessage name="name">
+                      {(msg) => <div style={{ color: "red", fontSize: "12px" }}>{msg}</div>}
+                    </ErrorMessage>
+                  )}
+                </div>
+              </div>
 
-        <div className="form-section">
-          <label className="form-label">Add Member (email)</label>
-          <div className="member-input-group">
-            <input
-              type="email"
-              className="form-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter member email"
-              onKeyPress={(e) => e.key === "Enter" && handleAddMember()}
-            />
-            <div className="member-controls">
-              <label className="admin-toggle">
-                <input
-                  type="checkbox"
-                  checked={isAdmin}
-                  onChange={(e) => setIsAdmin(e.target.checked)}
-                  className="checkbox-input"
-                />
-                <span className="admin-label">Admin</span>
-              </label>
-              <button className="btn btn-add" onClick={handleAddMember}>
-                +
-              </button>
-            </div>
-          </div>
-        </div>
+              <div className="form-section">
+                <label className="form-label" htmlFor="description">
+                  Description
+                </label>
+                <div className="input-group">
+                  <Field
+                    as="textarea"
+                    name="description"
+                    className="form-textarea"
+                    placeholder="Enter project description"
+                    rows="4"
+                  />
+                  {errors.description && touched.description && (
+                    <ErrorMessage name="description">
+                      {(msg) => <div style={{ color: "red", fontSize: "12px" }}>{msg}</div>}
+                    </ErrorMessage>
+                  )}
+                </div>
+              </div>
 
-        {members.length > 0 && (
-          <div className="members-list">
-            <h3 className="members-title">Members ({members.length})</h3>
-            <ul className="members">
-              {members.map((member) => (
-                <li key={member.id} className="member-item">
-                  <div>
-                    <span className="member-email">{member.email}</span>
-                    {member.isAdmin && <span className="member-role admin">Admin</span>}
-                  </div>
-                  <button
-                    className="btn"
-                    onClick={() => handleRemoveMember(member.id)}
-                    style={{ background: "transparent", color: "#999", padding: "4px 8px" }}
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+              <div style={{ marginTop: "20px" }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
 
       <aside className="action-sidebar">
-        <button className="btn btn-primary">Project Overview</button>
-        <button className="btn btn-danger">Delete Project</button>
+        <button className="btn btn-danger" onClick={handleDeleteProject}>
+          Delete Project
+        </button>
       </aside>
     </div>
   )

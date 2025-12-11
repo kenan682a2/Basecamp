@@ -1,36 +1,37 @@
 import {
-  FiMail,
   FiShare2,
   FiArchive,
-  FiTrash2
+  FiTrash2,
+  FiEdit2
 } from "react-icons/fi"
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsPeopleFill } from "react-icons/bs";
 import { IoChatbubbleOutline } from "react-icons/io5";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./ProjectCard.css"
 
 export default function ProjectCard({
+  id = null,
   title = "New Project",
-  email = "example@mail.com",
   description = "Description",
   onDelete = () => {},
   onSettings = () => {},
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="pc">
       <div className="pc__header">
         <div className="pc__header-left">
           <span className="pc__title">{title}</span>
-       
-          <span className="pc__email"><FiMail className="pc__email-icon" />{email}</span>
         </div>
         
-       <NavLink to='/projects/:projectId/edit'>
-         <button className="pc__settings-btn" onClick={onSettings}>
-          <IoSettingsOutline size={20} />
+        <button 
+          className="pc__settings-btn" 
+          onClick={() => id && navigate(`/projects/${id}/edit`)}
+        >
+          <FiEdit2 size={20} />
         </button>
-       </NavLink>
       </div>
 
       <div className="pc__content">
@@ -43,7 +44,7 @@ export default function ProjectCard({
             </div>
 
             <button className="pc__icon-btn">
-              1
+              0
             </button>
 
             <div className=".pc_icons">
@@ -51,11 +52,15 @@ export default function ProjectCard({
             </div>
 
             <button className="pc__icon-btn">
-              2
+              0
             </button>
           </div>
 
-          <button className="pc__delete-btn" onClick={onDelete}>
+          <button 
+            className="pc__delete-btn" 
+            onClick={onDelete}
+            title="Delete project"
+          >
             <FiTrash2 size={18} />
           </button>
         </div>
