@@ -84,7 +84,7 @@ export default function AllProjects() {
       {projects.length === 0 ? (
         <p>No projects found. Create one to get started!</p>
       ) : (
-        <div style={{ display: "grid", gap: "20px", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
+        <div className="projectsgrid">
           {projects.map((project) => (
             <div key={project.id}>
               <ProjectCard
