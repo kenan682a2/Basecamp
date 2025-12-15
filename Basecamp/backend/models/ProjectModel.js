@@ -12,6 +12,7 @@ export const ProjectModel = sqliteTable(
     name: text("name").notNull(),
     description: text("description"),
     owner_Id: integer("owner_Id"),
+    isAdminOnly: integer("isAdminOnly", { mode: "boolean" }).default(false),
   },
   (table) => ({
     uniqueName: uniqueIndex("projects_name_unique").on(table.name),

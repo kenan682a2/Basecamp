@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./addproject.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import api, { authHeaders } from "../../../../api";
+import api, { authHeaders } from "../../../../../backend/api";
 import { useNavigate } from "react-router";
 
 const projectValidationSchema = Yup.object({

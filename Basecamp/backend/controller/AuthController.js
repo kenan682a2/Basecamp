@@ -47,7 +47,7 @@ export const AuthController = {
       const valid = await bcrypt.compare(password, user.password);
       if (!valid) return res.status(401).json({ error: "Invalid email or password" });
 
-      const token = generateToken(user.id);
+      const token = generateToken(user);
       return res.status(200).json({ message: "Login successful", token, user: stripPassword(user) });
     } catch (error) {
       console.error("AuthController.login:", error);

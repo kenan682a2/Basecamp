@@ -12,6 +12,7 @@ export const ProjectController = {
         name,
         description,
         owner_Id,
+        isAdminOnly: false,
       });
 
       res.status(201).json({ message: "Project created", result });
@@ -26,10 +27,17 @@ export const ProjectController = {
   getAllProject: async (req, res) => {
     try {
       const userId = req.userId;
-      const projects = await db
-        .select()
-        .from(ProjectModel)
-        .where(eq(ProjectModel.owner_Id, userId));
+      const isAdmin = req.isAdmin;
+
+      let projects;
+      if (isAdmin) {
+        projects = await db.select().from(ProjectModel);
+      } else {
+        projects = await db
+          .select()
+          .from(ProjectModel)
+          .where(eq(ProjectModel.isAdminOnly, false));
+      }
       res.status(200).json(projects);
     } catch (error) {
       console.log(error);
@@ -40,15 +48,22 @@ export const ProjectController = {
     try {
       const { id } = req.params;
       const userId = req.userId;
+      const isAdmin = req.isAdmin;
+
+      let whereCondition;
+      if (isAdmin) {
+        whereCondition = eq(ProjectModel.id, Number(id));
+      } else {
+        whereCondition = and(
+          eq(ProjectModel.id, Number(id)),
+          eq(ProjectModel.owner_Id, userId)
+        );
+      }
+
       const project = await db
         .select()
         .from(ProjectModel)
-        .where(
-          and(
-            eq(ProjectModel.id, Number(id)),
-            eq(ProjectModel.owner_Id, userId)
-          )
-        );
+        .where(whereCondition);
 
       if (!project.length) {
         return res.status(404).json({ error: "Project not found" });
@@ -63,14 +78,21 @@ export const ProjectController = {
     try {
       const { id } = req.params;
       const userId = req.userId;
+      const isAdmin = req.isAdmin;
+
+      let whereCondition;
+      if (isAdmin) {
+        whereCondition = eq(ProjectModel.id, Number(id));
+      } else {
+        whereCondition = and(
+          eq(ProjectModel.id, Number(id)),
+          eq(ProjectModel.owner_Id, userId)
+        );
+      }
+
       await db
         .delete(ProjectModel)
-        .where(
-          and(
-            eq(ProjectModel.id, Number(id)),
-            eq(ProjectModel.owner_Id, userId)
-          )
-        );
+        .where(whereCondition);
       res.status(200).json({ message: "Project deleted" });
     } catch (error) {
       console.log(error);
@@ -92,17 +114,19 @@ export const ProjectController = {
   updateProject: async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, description } = req.body;
+      const { name, description, isAdminOnly } = req.body;
       const userId = req.userId;
+      const isAdmin = req.isAdmin;
+
+      const updateData = { name, description };
+      if (isAdmin) {
+        updateData.isAdminOnly = isAdminOnly;
+      }
+
       await db
         .update(ProjectModel)
-        .set({ name, description })
-        .where(
-          and(
-            eq(ProjectModel.id, Number(id)),
-            eq(ProjectModel.owner_Id, userId)
-          )
-        );
+        .set(updateData)
+        .where(eq(ProjectModel.id, Number(id)));
       res.status(201).json("Project updated");
     } catch (error) {
       console.log(error);

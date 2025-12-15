@@ -4,7 +4,7 @@ import People from "../../../assets/Images/people.png";
 import { NavLink, useNavigate } from "react-router";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import api from "../../../api";
+import api from "../../../../backend/api";
 
 const loginValidationSchema = Yup.object({
   email: Yup.string()

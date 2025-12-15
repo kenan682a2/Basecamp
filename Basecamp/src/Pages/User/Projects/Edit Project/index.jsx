@@ -4,6 +4,7 @@ import "./edit-project.css"
 import axios from "axios"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import { getCurrentUser } from "../../../../../backend/api"
 
 const editProjectValidationSchema = Yup.object({
   name: Yup.string()
@@ -58,6 +59,7 @@ export default function EditProjectForm() {
         {
           name: values.name,
           description: values.description,
+          isAdminOnly: values.isAdminOnly,
         },
         {
           headers: {
@@ -112,6 +114,7 @@ export default function EditProjectForm() {
           initialValues={{
             name: project.name || "",
             description: project.description || "",
+            isAdminOnly: project.isAdminOnly || false,
           }}
           validationSchema={editProjectValidationSchema}
           onSubmit={handleSubmit}
@@ -156,6 +159,15 @@ export default function EditProjectForm() {
                   )}
                 </div>
               </div>
+
+              {getCurrentUser() && getCurrentUser().isAdmin && (
+                <div className="form-section">
+                  <label className="form-label" htmlFor="isAdminOnly">
+                    <Field type="checkbox" name="isAdminOnly" id="isAdminOnly" />
+                    Admin Only
+                  </label>
+                </div>
+              )}
 
               <div style={{ marginTop: "20px" }}>
                 <button

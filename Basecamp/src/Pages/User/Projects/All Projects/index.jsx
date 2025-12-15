@@ -6,6 +6,7 @@ import { IoPeopleOutline } from "react-icons/io5";
 import ProjectCard from "../../../../Components/User/projectcard/card";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { getCurrentUser } from "../../../../../backend/api.js";
 
 export default function AllProjects() {
   const [projects, setProjects] = useState([]);
@@ -60,9 +61,16 @@ export default function AllProjects() {
 
   if (loading) return <section id="allprojects"><h1>Loading...</h1></section>;
 
+  const user = getCurrentUser();
+
   return (
     <section id="allprojects">
       <h1>Projects</h1>
+      {user && user.isAdmin && (
+        <button onClick={() => navigate('/admin')} style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Go to Admin Panel
+        </button>
+      )}
       <div className="sortprojects">
         <div className="allb">
           <button id="all-btn">
