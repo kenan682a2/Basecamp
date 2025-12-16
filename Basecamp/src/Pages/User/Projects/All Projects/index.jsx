@@ -66,11 +66,7 @@ export default function AllProjects() {
   return (
     <section id="allprojects">
       <h1>Projects</h1>
-      {user && user.isAdmin && (
-        <button onClick={() => navigate('/admin')} style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Go to Admin Panel
-        </button>
-      )}
+    
       <div className="sortprojects">
         <div className="allb">
           <button id="all-btn">
